@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="./jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="./jquery-ui.js"></script>
+    <title>Todo list online</title>
+</head>
+
+<body id="docbody">
+    <main class="mx-auto" class="card">
+        <!-- <form class="input-group mb-3" name="data" onsubmit="event.preventDefault()" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="text" class="form-control js-input" value="">
+            <button class="btn btn-outline-secondary js-btn" type="button" id="button-addon2">ADD</button>
+        </form> -->
+        <div class="js-add-modal" title="Add new to do item">
+            <form class="input-group mb-3" name="new-data" onsubmit="event.preventDefault()" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" name="new-checkbox" type="checkbox" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" name="new-text" value="" aria-label="Text input with checkbox">
+                <button class="btn btn-outline-secondary js-send-btn" type="button" id="button-addon2">SEND</button>
+            </form>
+        </div>
+        <div class="js-edit-modal" title="Edit to do item">
+            <form class="input-group mb-3" name="item-data" onsubmit="event.preventDefault()" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" name="item-checkbox" type="checkbox" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" name="item-text" value="" aria-label="Text input with checkbox">
+                <button class="btn btn-outline-secondary js-send-edit-btn" type="button" id="button-addon2">SEND</button>
+                <button class="btn btn-outline-secondary js-cancel-btn" type="button" id="button-addon2">CANCEL</button>
+            </form>
+        </div>
+        <button class="btn btn-outline-secondary js-add-btn" type="button" id="button-addon2">ADD</button>
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-header">Your to do list for today</div>
+            <div class="card-body">
+                <p class="card-text">
+                    <h5 class="card-title js-empty">Nothing to do</h5>
+                    <ul class="list-group js-list" hidden></ul>
+                </p>
+            </div>
+        </div>
+    </main>
+</body>
+<script src="index.js"></script>
+
+</html>
