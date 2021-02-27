@@ -107,7 +107,7 @@ class ToDosLogic {
     static addNewTodo() {
         const newListItem = {
             userId: 0,
-            id: toDosRepository.todos.length + 1,
+            id: $list.children.length + 1,
             title: $inputFormElement[0].value,
             completed: $checkboxFormElement[0].checked,
         };
