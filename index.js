@@ -41,6 +41,9 @@ class ToDosRepository {
     get todos() {
         return this._todos;
     }
+    findElementById(id) {
+        return this.todos.find(todo => todo.id === Number(id));
+    }
 }
 const toDosRepository = new ToDosRepository;
 
@@ -131,20 +134,7 @@ class ToDosLogic {
         const isDone = currentItem.dataset.completed;
         showEditForm(id, value, isDone);
     }
-    static getEditedData() {
-        const editedListItem = {
-            userId: 0,
-            id: $isDoneFormElement[0].id,
-            title: $itemTextFormElement[0].value,
-            completed: $isDoneFormElement[0].checked,
-        };
-        ToDosRequests.sendPutRequest(editedListItem);
-        editRepositoryItem(editedListItem);
-        editHtmlItem(editedListItem);
-        cleanForm();
-        $isDoneFormElement.removeAttr('id');
-        $editFormElement.dialog('close');
-    }
+
     static deleteElement(event) {
         const currentItem = event.target.closest('li');
         const id = +(currentItem.id)
@@ -154,42 +144,6 @@ class ToDosLogic {
     }
 
 }
-
-//RENDERS 
-function renderListItems(toDoList) {
-    const listItems = toDoList.map((toDoListItem) =>
-        getToDoListItem(toDoListItem)
-    );
-    if (listItems) {
-        $emptyMessage.attr('hidden', 'true');
-        $list.removeAttr('hidden');
-        $list.html(listItems.join(""));
-    }
-}
-
-function getToDoListItem(listItem) {
-    return `<li class="list-group-item js-item" data-completed = "${listItem.completed}" id=${listItem.id}>
-                ${listItem.title}
-                <span class = "icons">
-                    <i class="bi bi-pencil action js-action-edit"></i>
-                    <i class="bi bi-trash action js-action-delete"></i>
-                </span>
-            </li>`;
-}
-
-function getItemFromHTML(toDoItem) {
-    return {
-        id: toDoItem.id,
-        title: toDoItem.firstChild.nodeValue,
-        completed: toDoItem.dataset.completed,
-    };
-}
-
-function editHtmlItem(editedListItem) {
-    const $htmlItem = $(`#${editedListItem.id}`);
-    $htmlItem.replaceWith(getToDoListItem(editedListItem));
-}
-
 //LISTENERS
 
 function createAddEventListener() {
@@ -228,25 +182,85 @@ function createDeleteEventListener() {
 
 function createEditSendEventListener() {
     $sendEditButtonElement.click(() => {
-        ToDosLogic.getEditedData();
+        getEditedData();
         return;
     });
 }
 
-//UTILS
+// GETTING TOOLS
+function getEditedData() {
+    const editedListItem = {
+        userId: 0,
+        id: $isDoneFormElement[0].id,
+        title: $itemTextFormElement[0].value,
+        completed: $isDoneFormElement[0].checked,
+    };
+    ToDosRequests.sendPutRequest(editedListItem);
+    editRepositoryItem(editedListItem);
+    editHtmlItem(editedListItem);
+    cleanForm();
+    $isDoneFormElement.removeAttr('id');
+    $editFormElement.dialog('close');
+}
+
+function getItemFromHTML(toDoItem) {
+    return {
+        id: toDoItem.id,
+        title: toDoItem.firstChild.nodeValue,
+        completed: toDoItem.dataset.completed,
+    };
+}
+
+function getToDoListItem(listItem) {
+    return `<li class="list-group-item js-item" data-completed = "${listItem.completed}" id=${listItem.id}>
+                ${listItem.title}
+                <span class = "icons">
+                    <i class="bi bi-pencil action js-action-edit"></i>
+                    <i class="bi bi-trash action js-action-delete"></i>
+                </span>
+            </li>`;
+}
+
+function showEditForm(id, value, isDone) {
+    $isDoneFormElement[0].id = id;
+    $editFormElement.dialog('open');
+    $itemTextFormElement[0].value = `${value}`;
+    const isCompleted = isDone === 'false';
+    $isDoneFormElement[0].checked = isCompleted ? false : true;
+}
+
+// WRITTING TOOLS
+
+function renderListItems(toDoList) {
+    const listItems = toDoList.map((toDoListItem) =>
+        getToDoListItem(toDoListItem)
+    );
+    if (listItems) {
+        $emptyMessage.attr('hidden', 'true');
+        $list.removeAttr('hidden');
+        $list.html(listItems.join(""));
+    }
+}
+
+function editHtmlItem(editedListItem) {
+    const $htmlItem = $(`#${editedListItem.id}`);
+    $htmlItem.replaceWith(getToDoListItem(editedListItem));
+}
 
 function editRepositoryItemStatus(currentItem) {
     const id = +(currentItem.id);
-    const repositoryElement = toDosRepository.todos.find(todo => todo.id === id);
+    const repositoryElement = toDosRepository.findElementById(id);
     const isCompleted = repositoryElement.completed === 'false';
     repositoryElement.completed = isCompleted ? 'true' : 'false';
 }
 
 function editRepositoryItem(editedListItem) {
-    const repositoryElement = toDosRepository.todos.find(todo => todo.id === Number(editedListItem.id));
+    const repositoryElement = toDosRepository.findElementById(editedListItem.id);
     repositoryElement.title = editedListItem.title;
     repositoryElement.completed = editedListItem.completed;
 }
+
+//UTILS
 
 function cleanForm() {
     $dataFormElement[0].reset();
@@ -261,15 +275,6 @@ function initModals() {
     $addFormElement.dialog(baseModalOptions);
     $editFormElement.dialog(baseModalOptions);
 }
-
-function showEditForm(id, value, isDone) {
-    $isDoneFormElement[0].id = id;
-    $editFormElement.dialog('open');
-    $itemTextFormElement[0].value = `${value}`;
-    const isCompleted = isDone === 'false';
-    $isDoneFormElement[0].checked = isCompleted ? false : true;
-}
-
 
 
 init();
