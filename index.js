@@ -229,6 +229,7 @@ function createDeleteEventListener() {
 function createEditSendEventListener() {
     $sendEditButtonElement.click(() => {
         ToDosLogic.getEditedData();
+        return;
     });
 }
 
@@ -267,7 +268,6 @@ function showEditForm(id, value, isDone) {
     $itemTextFormElement[0].value = `${value}`;
     const isCompleted = isDone === 'false';
     $isDoneFormElement[0].checked = isCompleted ? false : true;
-    createEditSendEventListener();
 }
 
 
@@ -279,6 +279,7 @@ function init() {
     ToDosLogic.getToDoList();
     createAddEventListener();
     createSendEventListener();
+    createEditSendEventListener();
     createEditEventListener()
     createStatusEventListener();
     createDeleteEventListener();
